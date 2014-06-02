@@ -8,21 +8,18 @@ class TCPServer {
 	
 	public static void main(String argv[]) throws Exception {    
 		
-		String clientSentence;            
-		String capitalizedSentence;
-		ServerSocket welcomeSocket = new ServerSocket(6666);      
+		String entrada_cliente;            
+		ServerSocket socket = new ServerSocket(6666);      
 		
 		while(true) {             
 			
-			Socket connectionSocket = welcomeSocket.accept();             
-			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));             
-			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());     
+			Socket socket_servidor = socket.accept();             
+			BufferedReader de_cliente = new BufferedReader(new InputStreamReader(socket_servidor.getInputStream()));             
+			DataOutputStream a_cliente = new DataOutputStream(socket_servidor.getOutputStream());     
 			
-			clientSentence = inFromClient.readLine();    
-			
-			//System.out.println(clientSentence);
+			entrada_cliente = de_cliente.readLine();    
 
-			StringTokenizer tokens = new StringTokenizer(clientSentence);
+			StringTokenizer tokens = new StringTokenizer(entrada_cliente);
 			String accion = tokens.nextToken();
 			
 			if(accion.equals("guardar")) {
@@ -40,34 +37,22 @@ class TCPServer {
 				
 					fichero = new FileWriter("Mensajes.txt",true);
 					pw = new PrintWriter(fichero); 
-					pw.println(emisor + " " + receptor + " " + mensaje + '\n'); 
-				}       
+					pw.println(emisor + " " + receptor + " " + mensaje + '\n'); }       
 			
 				catch(Exception e) {
-				
-					e.printStackTrace();
-				}
+					e.printStackTrace(); }
 			
 				finally {    	 
 				
 					try {      
 					
-						// Nuevamente aprovechamos el finally para 
-						// asegurarnos que se cierra el fichero.
 						if (null != fichero)
-							fichero.close();         
-					}           
+							fichero.close(); }           
 				
 					catch (Exception e2) { 
-					
-						e2.printStackTrace();
-					}
-				}       
-			} 
+						e2.printStackTrace(); } } } 
 			
 			if(accion.equals("ver")) {
-				
-				//System.out.println("ver");  
 				
 				int i = 0;
 				String receptor = tokens.nextToken();
@@ -79,12 +64,11 @@ class TCPServer {
 		        String datos;
 		        String retornar = "";
 
-		        // Leer el archivo linea por linea
 		        while ((datos = buffer.readLine()) != null) {
 		        			        
 		        	StringTokenizer div = new StringTokenizer(datos, " "); 
 		        	
-		        	 while (div.hasMoreTokens()){
+		        	while (div.hasMoreTokens()) {
 		        		 
 		        		 String em = div.nextToken();
 		        		 String re = div.nextToken();
@@ -92,36 +76,13 @@ class TCPServer {
 		        	 
 		        		 if(receptor.equals(re)) {
 		        		 
-		        			 if(i == 0){
+		        			 if(i == 0) {
 		        				 
 		        				 i++;
-		        				 retornar = em + " " + me + " ";
-		        			 }	
+		        				 retornar = em + " " + me + " "; }	
 		        		 
-		        			 else {
-		        				 
-		        			 	 retornar = retornar + em + " " + me + " ";
-		        			 }
-		        	 
-		        		 }
-		        	 }	 
-		        }
+		        			 else	 
+		        			 	 retornar = retornar + em + " " + me + " "; } } }
 		        
-		        //System.out.println(retornar);
-		        outToClient.writeBytes(retornar + '\n');
-		        
-		        /*try {   	   
-
-					Socket socketCliente = new Socket("localhost", 4444);
-					DataOutputStream outToServer = new DataOutputStream(socketCliente.getOutputStream());
-					outToServer.writeBytes(retornar);
-					socketCliente.close();
-				}   
-				
-				catch(Exception e) {
-					e.printStackTrace();
-				}    */
-			}
-		}
-	}
-}
+		        a_cliente.writeBytes(retornar + '\n');
+		        buffer.close(); } } } }
